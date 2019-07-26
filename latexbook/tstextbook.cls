@@ -15,7 +15,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{tstextbook}[2017/02/19 Free LaTeX text book template from Typesetters.se]
 \LoadClass[11pt,onecolumn,titlepage,twoside,openany,UTF8]{ctexbook}
-%{book}
 
 %\documentclass[nofonts]{ctexart}
 %\setCJKmainfont[BoldFont=STHeiti, ItalicFont=STKaiti]{STSong}
@@ -45,7 +44,7 @@
 \definecolor{tsforestgreen}{RGB}{21,122,81}
 \definecolor{tsyellow}{RGB}{255,185,88}
 \definecolor{tsgrey}{RGB}{200,200,200}
-
+\definecolor{bgblue}{RGB}{193,210,240}
 % Graphics
 %--------------------------------------------------------------------------
 \RequirePackage{graphicx}
@@ -96,20 +95,20 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{omnetppp-zh_co
            {\parbox[t][1.6cm][t]{\paperwidth}
            {\huge\bfseries\sffamily\flushleft\thechapter. #1}};
       % Chapter contents
-      \draw[anchor=west,inner sep=0pt] (8.8cm,-7cm) node
-           [tssteelblue,
-            ultra thick,
-            fill=white,
-            fill opacity=.8,
-            draw=tssteelblue,
-            draw opacity=1,
-            line width=1.5pt,
-            rounded corners,
-            inner sep=0pt]
-           (0,0)
-           {\hspace{1cm}\parbox[t][7.1cm][t]{11cm}
-           {\vspace{-1cm}\huge\bfseries\sffamily\flushleft
-            \textcolor{black}{\sffamily\minitoc}}};
+      %\draw[anchor=west,inner sep=0pt] (8.8cm,-7cm) node
+       %    [tssteelblue,
+        %    ultra thick,
+         %   fill=white,
+          %  fill opacity=.8,
+           % draw=tssteelblue,
+            %draw opacity=1,
+            %line width=1.5pt,
+            %rounded corners,
+            %inner sep=0pt]
+           %(0,0)
+           %{\hspace{1cm}\parbox[t][7.1cm][t]{11cm}
+           %{\vspace{-1cm}\huge\bfseries\sffamily\flushleft
+            %\textcolor{black}{\sffamily\minitoc}}};
     \end{tikzpicture}
   };
 \end{tikzpicture}
@@ -157,16 +156,23 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{omnetppp-zh_co
 % 目录风格
 %--------------------------------------------------------------------------
 \RequirePackage{titletoc}
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+\titlecontents{part}[0.5cm]
+{\addvspace{14pt}\large\sffamily\bfseries}
+{\color{bgblue}\contentslabel[\Large\thecontentslabel]{2.25cm}}{}
+{\color{bgblue}\normalsize\sffamily\bfseries
+ \;\titlerule*[0.5pc]{.}}
 
 \titlecontents{chapter}[2.5cm]
 {\addvspace{14pt}\large\sffamily\bfseries}
 {\color{tssteelblue}\contentslabel[\Large\thecontentslabel]{2.25cm}}{}
 {\color{tssteelblue}\normalsize\sffamily\bfseries
- \;\titlerule*[0.5pc]{.}\;\thecontentspage}
+\;\titlerule*[0.5pc]{.}\;\thecontentspage}
 
 \titlecontents{section}[2.5cm]
-{\addvspace{5pt}\sffamily\bfseries}
+{\vspace{5pt}\sffamily\bfseries}
 {\contentslabel[\thecontentslabel]{1cm}}{}
 {\sffamily\color{black}\;\titlerule*[0.5pc]{.}\;\thecontentspage}[]
 
@@ -355,8 +361,8 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{omnetppp-zh_co
 % Other environments
 %--------------------------------------------------------------------------
 \newenvironment{summary}
-{\hspace{10pt}\par\small\it
- \begin{list}{}{\leftmargin=35pt\rightmargin=25pt}
+{\vspace{5pt}\Large\it
+ \begin{list}{}{\leftmargin=10pt\rightmargin=10pt}
  \item\ignorespaces\advance\baselineskip -1pt}
 {\end{list}\vspace{-0.5cm}}
 
@@ -392,3 +398,77 @@ contents={\includegraphics[width=\paperwidth,height=\paperheight]{omnetppp-zh_co
 \RequirePackage[most]{tcolorbox}
 \RequirePackage{booktabs}
 \RequirePackage{url}
+
+%----------------------------------------------------------------------------------------
+% PART HEADINGS
+%----------------------------------------------------------------------------------------
+
+% Numbered part in the table of contents
+\newcommand{\@mypartnumtocformat}[2]{%
+  \setlength\fboxsep{0pt}%
+  \noindent\colorbox{tssteelblue}{\strut\parbox[c][.7cm]{\ecart}{\color{tssteelblue}\Large\sffamily\bfseries\centering#1}}\hskip\esp\colorbox{tssteelblue}{\strut\parbox[c][.7cm]{\linewidth-\ecart-\esp}{\Large\sffamily\centering#2}}%
+}
+
+% Unnumbered part in the table of contents
+\newcommand{\@myparttocformat}[1]{%
+  \setlength\fboxsep{0pt}%
+  \noindent\colorbox{tssteelblue}{\strut\parbox[c][.7cm]{\linewidth}{\Large\sffamily\centering#1}}%
+}
+
+\newlength\esp
+\setlength\esp{4pt}
+\newlength\ecart
+\setlength\ecart{1.2cm-\esp}
+\newcommand{\thepartimage}{}%
+\newcommand{\partimage}[1]{\renewcommand{\thepartimage}{#1}}%
+\def\@part[#1]#2{%
+\ifnum \c@secnumdepth >-2\relax%
+\refstepcounter{part}%
+\addcontentsline{toc}{part}{{\protect\@myparttocformat{#1}}{}}
+\else%
+%\addcontentsline{toc}{part}{\texorpdfstring{\protect\@myparttocformat{#1}}{#1}}%
+\fi%
+\startcontents%
+\markboth{}{}%
+{\thispagestyle{empty}%
+\begin{tikzpicture}[remember picture,overlay]%
+
+\node at (current page.north west){\begin{tikzpicture}[remember picture,overlay]% 
+\fill[bgblue](0cm,0cm) rectangle (\paperwidth,-\paperheight);
+
+\node[anchor=north] at (4cm,-3.25cm){\color{tsblue}\fontsize{220}{100}\sffamily\bfseries\thepart}; 
+
+\node[anchor=south east] at (\paperwidth-1cm,-\paperheight+1cm){\parbox[t][][t]{8.5cm}{
+\printcontents{l}{0}{\setcounter{tocdepth}{1}}% The depth to which the Part mini table of contents displays headings; 0 for chapters only, 1 for chapters and sections and 2 for chapters, sections and subsections
+}};
+
+\node[anchor=north east] at (\paperwidth-1.5cm,-3.25cm){\parbox[t][][t]{15cm}{\strut\raggedleft\color{white}\fontsize{30}{30}\sffamily\bfseries#2}};
+
+\end{tikzpicture}};
+\end{tikzpicture}}%
+\@endpart}
+\def\@spart#1{%
+\startcontents%
+\phantomsection
+{\thispagestyle{empty}%
+\begin{tikzpicture}[remember picture,overlay]%
+\node at (current page.north west){\begin{tikzpicture}[remember picture,overlay]% 
+\fill[blue!40!black!30!](0cm,0cm) rectangle (\paperwidth,-\paperheight);
+\node[anchor=north east] at (\paperwidth-1.5cm,-3.25cm){\parbox[t][][t]{15cm}{\strut\raggedleft\color{white}\fontsize{30}{30}\sffamily\bfseries#1}};
+\end{tikzpicture}};
+\end{tikzpicture}}
+\addcontentsline{toc}{part}{\texorpdfstring{%
+\setlength\fboxsep{0pt}%
+\noindent\protect\colorbox{white}{\strut\protect\parbox[c][.7cm]{\linewidth}{\Large\sffamily\protect\centering #1\quad\mbox{}}}}{#1}}%
+\@endpart}
+\def\@endpart{\vfil\newpage
+\if@twoside
+\if@openright
+\null
+\thispagestyle{empty}%
+\newpage
+\fi
+\fi
+\if@tempswa
+\twocolumn
+\fi}
